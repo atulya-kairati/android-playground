@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.atulya.basiccompose.models.Message
 import com.atulya.basiccompose.models.sampleMessages
+import com.atulya.basiccompose.ui.components.Conversation
 import com.atulya.basiccompose.ui.components.MessageCard
 import com.atulya.basiccompose.ui.theme.BasicComposeTheme
 
@@ -30,22 +31,6 @@ class MainActivity : ComponentActivity() {
                     Conversation(sampleMessages())
                 }
             }
-        }
-    }
-}
-
-
-@Composable
-fun Conversation(
-    messages: List<Message>,
-    modifier: Modifier = Modifier
-) {
-    LazyColumn(modifier = modifier) {
-
-        items(messages) { msg ->
-            MessageCard(
-                msg = msg,
-            )
         }
     }
 }
