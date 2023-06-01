@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -39,30 +41,29 @@ fun MyApp(modifier: Modifier = Modifier) {
         mutableStateOf(true)
     }
 
-    if (showOnboardingScreen){
+    if (showOnboardingScreen) {
         OnboardingScreen(onClickContinue = { showOnboardingScreen = false })
-    }
-    else {
+    } else {
         Greetings()
     }
 }
 
 
 @Composable
-fun Greetings(modifier: Modifier = Modifier){
-    val names: List<String> = listOf("Manus", "Compose")
+fun Greetings(modifier: Modifier = Modifier) {
+    val names: List<String> = List(100) { "$it" }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
-        Column(
-            modifier = Modifier.padding(4.dp)
-        ) {
-            names.forEach { name ->
+
+        LazyColumn(modifier = Modifier.padding(vertical = 4.dp)) {
+            items(items = names) { name ->
                 Greeting(name = name)
             }
         }
+
     }
 }
 
@@ -74,7 +75,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
         mutableStateOf(false)
     }
 
-    val extraPadding = if(isExpanded) 48.dp else 0.dp
+    val extraPadding = if (isExpanded) 48.dp else 0.dp
 
     Surface(
         color = MaterialTheme.colorScheme.primary,
@@ -98,7 +99,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
             }
 
             ElevatedButton(onClick = { isExpanded = !isExpanded }) {
-                Text(text = if(isExpanded) "Show less" else "Show More")
+                Text(text = if (isExpanded) "Show less" else "Show More")
             }
         }
     }
