@@ -3,6 +3,9 @@ package com.atulya.expandablelistwithonboardingscreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -72,11 +75,24 @@ fun Greetings(modifier: Modifier = Modifier) {
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
 
-    var isExpanded: Boolean by remember {
+    var isExpanded: Boolean by rememberSaveable {
         mutableStateOf(false)
     }
 
-    val extraPadding = if (isExpanded) 48.dp else 0.dp
+    val extraPadding by animateDpAsState(
+        if (isExpanded) 48.dp else 0.dp,
+
+        /**
+         * Any animation created with animate*AsState is interruptible.
+         * This means that if the target value changes in the middle of
+         * the animation, animate*AsState restarts the animation and
+         * points to the new value.
+         */
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow
+        )
+    )
 
     Surface(
         color = MaterialTheme.colorScheme.primary,
@@ -89,7 +105,9 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(bottom = extraPadding)
+                    .padding(
+                        bottom = extraPadding.coerceAtLeast(0.dp) // to avoid -ve padding due to spring anim
+                    )
             ) {
                 Text(
                     text = "Hello,",
