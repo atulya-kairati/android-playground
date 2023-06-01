@@ -19,6 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.atulya.expandablelistwithonboardingscreen.ui.screens.OnboardingScreen
 import com.atulya.expandablelistwithonboardingscreen.ui.theme.ExpandableListWithOnboardingScreenTheme
 
 class MainActivity : ComponentActivity() {
@@ -34,9 +35,22 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MyApp(modifier: Modifier = Modifier) {
+    var showOnboardingScreen by remember {
+        mutableStateOf(true)
+    }
 
+    if (showOnboardingScreen){
+        OnboardingScreen(onClickContinue = { showOnboardingScreen = false })
+    }
+    else {
+        Greetings()
+    }
+}
+
+
+@Composable
+fun Greetings(modifier: Modifier = Modifier){
     val names: List<String> = listOf("Manus", "Compose")
-
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -71,7 +85,8 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
             modifier = modifier.padding(24.dp)
         ) {
             Column(
-                modifier = Modifier.weight(1f)
+                modifier = Modifier
+                    .weight(1f)
                     .padding(bottom = extraPadding)
             ) {
                 Text(
@@ -92,6 +107,14 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
+    ExpandableListWithOnboardingScreenTheme {
+        Greetings()
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun MyAppPreview() {
     ExpandableListWithOnboardingScreenTheme {
         MyApp()
     }
