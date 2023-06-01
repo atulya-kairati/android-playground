@@ -1,9 +1,11 @@
 package com.atulya.expandablelistwithonboardingscreen
 
 import android.content.res.Configuration
+import android.net.ipsec.ike.IkeSessionParams.IkeAuthConfig
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
@@ -13,7 +15,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -23,7 +32,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.atulya.expandablelistwithonboardingscreen.ui.screens.OnboardingScreen
@@ -80,6 +91,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
         mutableStateOf(false)
     }
 
+
     val extraPadding by animateDpAsState(
         if (isExpanded) 48.dp else 0.dp,
 
@@ -95,20 +107,28 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
         )
     )
 
-    Surface(
-        color = MaterialTheme.colorScheme.primary,
+    Card(
         modifier = modifier
-            .padding(vertical = 4.dp, horizontal = 8.dp)
+            .padding(vertical = 4.dp, horizontal = 8.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primary
+        )
     ) {
         Row(
-            modifier = modifier.padding(24.dp)
+            modifier = modifier
+                .padding(24.dp)
+                .animateContentSize(
+                    // animating row size as new element is added or removed
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioMediumBouncy,
+                        stiffness = Spring.StiffnessLow
+                    )
+                )
+
         ) {
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(
-                        bottom = extraPadding.coerceAtLeast(0.dp) // to avoid -ve padding due to spring anim
-                    )
             ) {
                 Text(
                     text = "Hello,",
@@ -119,11 +139,28 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
                         fontStyle = FontStyle.Italic
                     )
                 )
+
+                if (isExpanded) {
+                    Text(
+                        text = stringResource(R.string.filler_text),
+                        softWrap = true,
+                        textAlign = TextAlign.Justify
+                    )
+                }
             }
 
-            ElevatedButton(onClick = { isExpanded = !isExpanded }) {
-                Text(text = if (isExpanded) "Show less" else "Show More")
+            IconButton(
+                onClick = { isExpanded = !isExpanded },
+            ) {
+                Icon(
+                    imageVector = if (isExpanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+                    contentDescription = stringResource(
+                        if (isExpanded) R.string.show_less
+                        else R.string.show_more
+                    )
+                )
             }
+
         }
     }
 }
