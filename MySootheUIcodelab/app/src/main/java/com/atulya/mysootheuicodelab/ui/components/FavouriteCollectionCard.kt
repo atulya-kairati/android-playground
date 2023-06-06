@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -28,9 +29,9 @@ fun FavouriteCollectionCard(
     @DrawableRes image: Int,
     @StringRes text: Int,
 ) {
-    Surface(
+    Card(
         modifier = modifier,
-        shape = MaterialTheme.shapes.small
+        shape = MaterialTheme.shapes.small,
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

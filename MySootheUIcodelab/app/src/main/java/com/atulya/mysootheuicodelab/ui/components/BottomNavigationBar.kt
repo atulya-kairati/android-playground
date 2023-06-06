@@ -15,14 +15,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.atulya.mysootheuicodelab.R
 
 
-@Preview
 @Composable
 fun BottomNavigationBar(
     modifier: Modifier = Modifier
 ) {
     BottomAppBar(
         modifier = Modifier,
-        containerColor = MaterialTheme.colorScheme.background
     ) {
 
         NavigationBarItem(
@@ -52,6 +50,6 @@ fun BottomNavigationBar(
 
 @Preview
 @Composable
-fun BottomNavigationBar(){
+fun BottomNavigationBarPreview(){
     BottomNavigationBar()
 }
