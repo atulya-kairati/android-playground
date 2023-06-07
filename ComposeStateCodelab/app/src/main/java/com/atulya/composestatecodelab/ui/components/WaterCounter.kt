@@ -2,6 +2,7 @@ package com.atulya.composestatecodelab.ui.components
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -30,14 +31,29 @@ fun WaterCounter(
 
     Column(modifier = modifier.padding(16.dp)) {
 
-        if (count > 0){
+        if (count > 0) {
+
+            var showTask by remember {
+                mutableStateOf(true)
+            }
+
+            if (showTask) {
+                WellnessTaskItem(text = "Go on son, have a wank.", onClose = { showTask = false })
+            }
+
             Text(
                 text = "You've had $count glasses.",
             )
         }
 
-        Button(onClick = { count++ }, enabled = count < 10) {
-            Text(text = "Add one")
+        Row {
+            Button(onClick = { count++ }, enabled = count < 10) {
+                Text(text = "Add one")
+            }
+
+            Button(onClick = { count = 0 }) {
+                Text(text = "Clear water counter")
+            }
         }
     }
 }
