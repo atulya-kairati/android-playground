@@ -8,6 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.atulya.composestatecodelab.ui.components.WellnessScreen
+import com.atulya.composestatecodelab.ui.components.WellnessTasksList
 import com.atulya.composestatecodelab.ui.theme.ComposeStateCodelabTheme
 
 class MainActivity : ComponentActivity() {
