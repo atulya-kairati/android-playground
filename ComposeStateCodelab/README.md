@@ -30,6 +30,46 @@
 - Compose tracks variable which are of type `State` or `MutableState` (But it must be used with remember and its variants).
 
 - Compose keeps track of each composable that reads State value properties and triggers a recomposition when its value changes. 
+***
 
-- **Remember**: remember stores objects in the Composition, and forgets the object if the source location where remember is called is not invoked again during a recomposition.
+## Remembering state with `remember`:
 
+- **Remember**: `remember` stores objects in the Composition, and forgets the object if the source location where `remember` is called is not invoked again during a recomposition.
+
+- While `remember` helps you retain state across recompositions, it's not retained across configuration changes. For this, you must use rememberSaveable instead of remember.
+
+- `rememberSaveable` automatically saves any value that can be saved in a `Bundle`. For saving custom objects refer ![Restoring state in Compose](https://developer.android.com/jetpack/compose/state#restore-ui-state).
+
+- `rememberSaveable` will not only survive recompostion and activity recreation but also process death since it uses savedStateHandle internally.
+***
+
+## State Hoisting
+
+- A composable that uses remember to store an object contains internal state, making the composable **stateful**.
+- **Stateful** composables are useful when the caller doesn't need to control the state. But they are less reusable and are harder to test.
+
+- **Stateless** composable on the other hand, don't have internal state.
+
+- Easy way to convert Stateful composable to Stateless is by using **State Hoisting**.
+- State hoisting in Compose is a pattern of moving state to a composable's caller to make a composable stateless.
+- The general pattern for state hoisting in Jetpack Compose is to replace the state variable with two parameters:
+```kotlin
+value: T - the current value to display
+onValueChange: (T) -> Unit - an event that requests the value to change, where T is the proposed new value
+```
+where `value` represents any state that could be modified.
+
+- Here state goes down to the composable and the changes to the state (events) come up. This is Unidirectional Flow architecture.
+
+- State that is hoisted this way has some important properties:
+	- **Single source of truth**: By moving state instead of duplicating it, we're ensuring there's only one source of truth. This helps avoid bugs.
+	- **Shareable**: Hoisted state can be shared with multiple composables.
+	- **Interceptable**: Callers to the stateless composables can decide to ignore or modify events before changing the state.
+	- **Decoupled**: The state for a stateless composable function can be stored anywhere. For example, in a ViewModel.
+
+
+- **Key Point**: When hoisting state, there are three rules to help you figure out where state should go:
+	- State should be hoisted to at least the lowest common parent of all composables that use the state (read).
+	- State should be hoisted to at least the highest level it may be changed (write).
+	- If two states change in response to the same events they should be hoisted to the same level.
+- You can hoist the state higher than these rules require, but if you don't hoist the state high enough, it might be difficult or impossible to follow unidirectional data flow.
