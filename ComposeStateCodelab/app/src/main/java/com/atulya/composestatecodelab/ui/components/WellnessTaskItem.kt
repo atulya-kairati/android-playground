@@ -47,19 +47,18 @@ fun StatelessWellnessTaskItem(
 }
 
 @Composable
-fun StatefulWellnessTaskItem(
+fun WellnessTaskItem(
+    modifier: Modifier = Modifier,
     text: String,
     onClose: () -> Unit,
-    modifier: Modifier = Modifier,
+    onCheckedChange: (Boolean) -> Unit,
+    checked: Boolean
 ) {
 
-    var checkedState by rememberSaveable {
-        mutableStateOf(false)
-    }
     StatelessWellnessTaskItem(
         text = text,
-        checked = checkedState,
-        onCheckedChange = { checkedState = it },
+        checked = checked,
+        onCheckedChange = onCheckedChange,
         onClose = onClose,
         modifier = modifier
     )

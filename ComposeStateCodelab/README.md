@@ -78,6 +78,9 @@ where `value` represents any state that could be modified.
 ## Observable MutableList
 
 - To use list as state use MutableStateList.
+- Recomposition will happen if the list elements are added or deleted.
+- Recomposition will not happen if the attributes of list elements are being modified.
+- Or if the attributes in the elements are
 
 ```kotlin
 val list = remember {
@@ -101,3 +104,40 @@ val list = remember {
 **Warning**: 
 - `rememberSaveable` won't work with mutable state list.
 - Don't use remember method for large data, use view model instead.
+***
+
+## ViewModel
+
+- ViewModels provide the UI state and access to the business logic located in other layers of the app. 
+- Additionally, ViewModels survive configuration changes, so they have a longer lifetime than the Composition. 
+- They can follow the lifecycle of the host of Compose content—that is, activities, fragments, or the destination of a Navigation graph if you're using Compose Navigation.
+
+```groovy
+implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1"
+```
+
+- Keep viewModel on Screen level and don't pass them down anyother composables. Instead pass data up.
+```kotlin
+@Composable
+fun WellnessScreen(
+    modifier: Modifier = Modifier,
+    wellnessViewModel: WellScreenViewModel = viewModel()
+) {
+
+    Column {
+        WaterCounter(modifier = modifier)
+        WellnessTasksList(
+            list = wellnessViewModel.task,
+            onCloseTask = { task ->
+                wellnessViewModel.removeTask(task)
+            },
+            onCheckChanged = { task, checked ->
+                wellnessViewModel.changeTaskChecked(task.id, checked)
+            }
+        )
+    }
+}
+```
+
+**Warning**: ViewModels are not part of the Composition. Therefore, you should not hold state created in composables (for example, a remembered value) because this could cause memory leaks.
+

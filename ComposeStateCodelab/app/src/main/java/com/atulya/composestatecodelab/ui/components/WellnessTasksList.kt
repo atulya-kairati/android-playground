@@ -11,6 +11,7 @@ import com.atulya.composestatecodelab.model.WellnessTask
 fun WellnessTasksList(
     list: List<WellnessTask>,
     onCloseTask: (WellnessTask) -> Unit,
+    onCheckChanged: (WellnessTask, Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn {
@@ -32,9 +33,13 @@ fun WellnessTasksList(
             list,
             key = { task -> task.id }
         ) { task ->
-            StatefulWellnessTaskItem(
+            WellnessTaskItem(
                 text = task.label,
-                onClose = { onCloseTask(task) }
+                onClose = { onCloseTask(task) },
+                checked = task.checked,
+                onCheckedChange = { checked ->
+                    onCheckChanged(task, checked)
+                }
             )
         }
     }

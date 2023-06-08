@@ -1,6 +1,5 @@
 package com.atulya.composestatecodelab.ui.components
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -39,7 +38,7 @@ fun StatelessWaterCounter(
 
 
 @Composable
-fun StatefulWaterCounter(
+fun WaterCounter(
     modifier: Modifier = Modifier,
 ) {
     // this alone will not work since count will keep getting reassigned to 0 during recomposition
