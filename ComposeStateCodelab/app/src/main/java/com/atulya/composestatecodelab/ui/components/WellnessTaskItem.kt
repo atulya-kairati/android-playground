@@ -49,6 +49,7 @@ fun StatelessWellnessTaskItem(
 @Composable
 fun StatefulWellnessTaskItem(
     text: String,
+    onClose: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
 
@@ -59,7 +60,7 @@ fun StatefulWellnessTaskItem(
         text = text,
         checked = checkedState,
         onCheckedChange = { checkedState = it },
-        onClose = {},
+        onClose = onClose,
         modifier = modifier
     )
 }

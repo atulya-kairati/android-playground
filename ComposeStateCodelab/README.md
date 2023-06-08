@@ -73,3 +73,31 @@ where `value` represents any state that could be modified.
 	- State should be hoisted to at least the highest level it may be changed (write).
 	- If two states change in response to the same events they should be hoisted to the same level.
 - You can hoist the state higher than these rules require, but if you don't hoist the state high enough, it might be difficult or impossible to follow unidirectional data flow.
+***
+
+## Observable MutableList
+
+- To use list as state use MutableStateList.
+
+```kotlin
+val list = remember {
+    getWellnessTasksList(30).toMutableStateList()
+}
+```
+
+or 
+
+```kotlin
+val list = remember {
+	mutableStateListOf<WellnessTask>().apply { addAll(getWellnessTasks(30)) }
+}
+```
+
+**Warning**: Make sure when using such list with `items(){}` method (like in LazyColumn)
+-  The items method receives a key parameter. By default, each item's state is keyed against the position of the item in the list.
+- In a mutable list, this causes issues when the data set changes, since items that change position effectively lose any remembered state.
+- Use `key` argument to get over this issue.
+
+**Warning**: 
+- `rememberSaveable` won't work with mutable state list.
+- Don't use remember method for large data, use view model instead.
