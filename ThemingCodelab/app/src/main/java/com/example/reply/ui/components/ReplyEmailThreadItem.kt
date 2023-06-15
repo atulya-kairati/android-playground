@@ -27,7 +27,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -35,7 +34,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -69,9 +67,11 @@ fun ReplyEmailThreadItem(
             ) {
                 Text(
                     text = email.sender.firstName,
+                    style = MaterialTheme.typography.labelMedium
                 )
                 Text(
                     text = stringResource(id = R.string.twenty_mins_ago),
+                    style = MaterialTheme.typography.labelMedium
                 )
             }
             IconButton(
@@ -89,11 +89,14 @@ fun ReplyEmailThreadItem(
 
         Text(
             text = email.subject,
+            style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.padding(top = 12.dp, bottom = 8.dp),
         )
 
         Text(
             text = email.body,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Row(
             modifier = Modifier
@@ -124,7 +127,7 @@ fun ReplyEmailThreadItem(
 
 @Preview(showSystemUi = true)
 @Composable
-fun ReplyEmailThreadItemPreview(){
+fun ReplyEmailThreadItemPreview() {
     ReplyEmailThreadItem(
         email = LocalEmailsDataProvider.allEmails.first()
     )
