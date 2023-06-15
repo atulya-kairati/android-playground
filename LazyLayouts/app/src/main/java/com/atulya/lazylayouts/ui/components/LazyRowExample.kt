@@ -21,6 +21,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 
+
+/**
+ * [Warning]:
+ * Don't use 0 sized children in LazyLayouts
+ */
+
 @Composable
 fun LazyRowExample(
     modifier: Modifier = Modifier,
@@ -36,6 +42,10 @@ fun LazyRowExample(
     }
 
     LazyRow(
+        /**
+         * [Arrangement.Horizontal] can be implemented
+         * to create custom arrangement object.
+         */
         horizontalArrangement = Arrangement.spacedBy(8.dp), // space between children
         contentPadding = PaddingValues(8.dp), // padding without clipping children
         verticalAlignment = Alignment.CenterVertically,

@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -16,6 +15,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 
+
+/**
+ * [Warning]:
+ * Don't use 0 sized children in LazyLayouts
+ */
 
 @Composable
 fun LazyVerticalGridFixedItemCountExample(
@@ -115,7 +119,7 @@ fun LazyVerticalGridCategoriesExample(
                 GridItemSpan(maxLineSpan)
                 // also available: [maxCurrentLineSpan]
             }
-        ){
+        ) {
             HorizontalCard()
         }
         items(10) { idx ->
@@ -129,7 +133,7 @@ fun LazyVerticalGridCategoriesExample(
             span = {
                 GridItemSpan(maxLineSpan)
             }
-        ){
+        ) {
             HorizontalCard()
         }
         items(10) { idx ->
