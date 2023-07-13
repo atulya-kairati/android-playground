@@ -17,20 +17,26 @@
 package com.example.compose.rally
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navDeepLink
+import com.example.compose.rally.ui.accounts.AccountsScreen
+import com.example.compose.rally.ui.accounts.SingleAccountScreen
+import com.example.compose.rally.ui.bills.BillsScreen
 import com.example.compose.rally.ui.components.RallyTabRow
+import com.example.compose.rally.ui.overview.OverviewScreen
 import com.example.compose.rally.ui.theme.RallyTheme
 
 /**
@@ -49,40 +55,57 @@ class RallyActivity : ComponentActivity() {
 @Composable
 fun RallyApp() {
     RallyTheme {
-        var currentScreen: RallyDestination by remember { mutableStateOf(Overview) }
         val navController = rememberNavController()
+
+        // getting current displayed screen
+        val currentBackStack by navController.currentBackStackEntryAsState()
+
+        val currentDestination = currentBackStack?.destination
+
+        val currentScreen = rallyTabRowScreens.find {
+            it.route == currentDestination?.route
+        } ?: Overview
 
         Scaffold(
             topBar = {
                 RallyTabRow(
                     allScreens = rallyTabRowScreens,
-                    onTabSelected = { screen -> currentScreen = screen },
+                    onTabSelected = { screen ->
+                        navController.navigateSingleTopTo(screen.route)
+                    },
                     currentScreen = currentScreen
                 )
             }
         ) { innerPadding ->
-            NavHost(
+            
+            RallyNavHost(
                 navController = navController,
-                startDestination = Overview.route,
-                modifier = Modifier.padding(innerPadding)
-            ) {
-                // builder
-                // destinations go here
-
-
-                composable(route = Overview.route) {
-                    Overview.screen()
-                }
-
-                composable(route = Accounts.route) {
-                    Accounts.screen()
-                }
-
-                composable(route = Bills.route) {
-                    Bills.screen()
-                }
-            }
+                modifier = Modifier.padding(innerPadding),
+            )
 
         }
     }
+}
+
+
+fun NavHostController.navigateSingleTopTo(route: String) {
+    val controller = this
+    this.navigate(route) {
+        launchSingleTop = true // will prevent consecutive duplication
+
+        popUpTo( // will go to start destination when back is pressed
+            route = controller.graph.findStartDestination().route !!
+            // OR // controller.graph.findStartDestination().id
+        ) {
+            saveState = true
+        }
+
+        // restore state of the composable when navigating to it
+        restoreState = true
+    }
+}
+
+fun NavHostController.navigateToSingleAccount(accountType: String) {
+    // We don't need `{}` surrounding the argument in the route here.
+    this.navigateSingleTopTo("${SingleAccount.route}/$accountType")
 }
